@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -8,19 +7,17 @@
 </head>
 <body>
 
-<h1 style="color:lime">GhostLink UI Test</h1>
-
 <div class="terminal">
   <div class="header">GHOSTLINK :: CLASSIFIED</div>
-  <div id="output">OUTPUT AREA</div>
+  <div id="output"></div>
   <div class="input-line">
     <span>&gt;</span>
-    <input id="cmd" />
+    <input id="cmd" autofocus placeholder="type command..." />
   </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/supabase.min.js"></script>
+<!-- ✅ SUPABASE v1 (WORKING ON GITHUB PAGES) -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@1.35.7"></script>
 <script src="app.js"></script>
-
 </body>
 </html>
