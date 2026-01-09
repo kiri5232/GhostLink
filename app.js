@@ -1,6 +1,8 @@
+// 🔴 PASTE YOUR DETAILS
 const SUPABASE_URL = "https://vwupogcadnzmpykdgabq.supabase.co";
 const SUPABASE_KEY = "sb_publishable_RPAo7Ri22ji6YfxGNkaj2Q_CBJu89oX";
 
+// ✅ v1 client
 const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 const out = document.getElementById("output");
@@ -9,46 +11,58 @@ const cmd = document.getElementById("cmd");
 let room = null;
 let mode = null;
 
-print("GhostLink v1 initialized");
-print("Commands: mode drop | mode pad | room X | drop MSG | read | pad MSG");
+print("GhostLink v1.1 ONLINE");
+print("Commands:");
+print("mode drop | room X | drop MSG | read");
+print("------------------------------");
 
 cmd.addEventListener("keydown", async e => {
   if (e.key === "Enter") {
-    await handle(cmd.value.trim());
+    const value = cmd.value.trim();
     cmd.value = "";
+    if (value) await handle(value);
   }
 });
 
 async function handle(text) {
   print("> " + text);
 
-  if (text.startsWith("mode")) {
+  if (text.startsWith("mode ")) {
     mode = text.split(" ")[1];
     return print("Mode set: " + mode);
   }
 
-  if (text.startsWith("room")) {
+  if (text.startsWith("room ")) {
     room = text.split(" ")[1];
     return print("Room joined: " + room);
   }
 
-  if (text.startsWith("drop")) {
+  if (text.startsWith("drop ")) {
+    if (!room) return print("Join room first.");
     const msg = text.replace("drop ","");
-    await db.from("ghostlink").insert({
-      room, mode:"drop", payload: msg
+
+    const { error } = await db.from("ghostlink").insert({
+      room: room,
+      mode: "drop",
+      payload: msg
     });
-    return print("Message dropped.");
+
+    if (error) return print("Error: " + error.message);
+    return print("Message sent.");
   }
 
   if (text === "read") {
-    const { data } = await db
+    if (!room) return print("Join room first.");
+
+    const { data, error } = await db
       .from("ghostlink")
       .select("*")
       .eq("room", room)
-      .eq("mode","drop")
-      .order("created_at",{ascending:true})
+      .eq("mode", "drop")
+      .order("created_at", { ascending: true })
       .limit(1);
 
+    if (error) return print("Error: " + error.message);
     if (!data.length) return print("No messages.");
 
     print("Message: " + data[0].payload);
@@ -56,29 +70,10 @@ async function handle(text) {
     return;
   }
 
-  if (text.startsWith("pad")) {
-    const pad = text.replace("pad ","");
-    await db.from("ghostlink").delete().eq("room",room).eq("mode","pad");
-    await db.from("ghostlink").insert({
-      room, mode:"pad", payload: pad
-    });
-    return print("Pad updated.");
-  }
-
-  if (text === "pad read") {
-    const { data } = await db
-      .from("ghostlink")
-      .select("*")
-      .eq("room", room)
-      .eq("mode","pad")
-      .limit(1);
-
-    return print(data.length ? data[0].payload : "Empty pad.");
-  }
-
   print("Unknown command.");
 }
 
-function print(t){
+function print(t) {
   out.innerText += t + "\n";
+  out.scrollTop = out.scrollHeight;
 }
