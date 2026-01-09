@@ -25,11 +25,14 @@ body {
 
 #output {
   min-height:300px;
+  max-height:300px;
+  overflow-y:auto;
   white-space:pre-wrap;
 }
 
 .input-line {
   display:flex;
+  margin-top:10px;
 }
 
 input {
@@ -38,4 +41,5 @@ input {
   border:none;
   outline:none;
   color:#00ff88;
+  font-family: monospace;
 }
