@@ -1,6 +1,26 @@
+
 <!DOCTYPE html>
 <html>
-<body style="background:black;color:lime;font-size:30px">
-GHOSTLINK TEST OK
+<head>
+  <meta charset="UTF-8">
+  <title>GhostLink</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<h1 style="color:lime">GhostLink UI Test</h1>
+
+<div class="terminal">
+  <div class="header">GHOSTLINK :: CLASSIFIED</div>
+  <div id="output">OUTPUT AREA</div>
+  <div class="input-line">
+    <span>&gt;</span>
+    <input id="cmd" />
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/supabase.min.js"></script>
+<script src="app.js"></script>
+
 </body>
 </html>
