@@ -63,48 +63,58 @@ button {
 </div>
 </div><audio id="beep" src="https://www.soundjay.com/button/beep-07.wav"></audio>
 
-<script>
+  <script>
 const data = {
   "RZ001": {name: "Aman", reason: "Certified Legend", date: "2026"},
   "RZ002": {name: "Sneha", reason: "Most Loyal Friend", date: "2026"},
   "RZ003": {name: "Rahul", reason: "Comedy King", date: "2026"}
 };
 
-// AUTO QR DETECT
+let currentID = null;
+
+// AUTO QR DETECT (FIXED)
 window.onload = () => {
   const params = new URLSearchParams(window.location.search);
   const id = params.get("id");
-  if (id) {
+  if (id && data[id]) {
     document.getElementById("certId").value = id;
     verify();
   }
 };
 
 function verify() {
-  let id = document.getElementById("certId").value.toUpperCase();
+  let id = document.getElementById("certId").value.trim().toUpperCase();
   let loading = document.getElementById("loading");
   let result = document.getElementById("result");
 
+  if (!id) {
+    alert("Enter Certificate ID");
+    return;
+  }
+
   loading.classList.remove("hidden");
   result.classList.add("hidden");
+
   document.getElementById("beep").play();
 
   setTimeout(() => {
     loading.classList.add("hidden");
 
     if (data[id]) {
+      currentID = id;
+
       document.getElementById("name").innerText = data[id].name;
       document.getElementById("reason").innerText = data[id].reason;
       document.getElementById("date").innerText = data[id].date;
       document.getElementById("count").innerText = Object.keys(data).length;
+
       result.classList.remove("hidden");
-      window.currentID = id;
     } else {
       alert("❌ Invalid Certificate ID");
     }
-  }, 2500);
+  }, 2000);
 }
-
+    
 // PDF DOWNLOAD (IMAGE BASED CERTIFICATE)
 function downloadPDF() {
   const { jsPDF } = window.jspdf;
